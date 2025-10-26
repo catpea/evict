@@ -1,0 +1,21 @@
+{
+  "type": "module",
+  "name": "evict",
+  "description": "lightweight static blog generator",
+  "version": "2.0.2",
+  "main": "index.js",
+  "module": "index.js",
+  "scripts": {
+    "save": "git add .; git commit -m 'Updated Release'; npm version patch; npm publish; git push --follow-tags;",
+    "test": "node --test",
+    "zprepublishOnly": "npm test"
+  },
+  "keywords": [
+    "blog"
+  ],
+  "author": "catpea (https://github.com/catpea)",
+  "license": "MIT",
+
+  "dependencies": {
+  }
+}
