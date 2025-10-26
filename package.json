@@ -2,7 +2,7 @@
   "type": "module",
   "name": "evict",
   "description": "lightweight static blog generator",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "main": "index.js",
   "module": "index.js",
   "scripts": {
@@ -15,7 +15,5 @@
   ],
   "author": "catpea (https://github.com/catpea)",
   "license": "MIT",
-
-  "dependencies": {
-  }
+  "dependencies": {}
 }
