@@ -34,19 +34,9 @@ export default class IncrementalCopy {
     .map(entry => path.join(entry.parentPath, entry.name))
     .map(entry => path.relative(srcDir, entry))
     .filter(location => !this.ignore.some(fn => fn(location)));
-    // console.log('---filePaths---')
-    // console.log(filePaths)
-    // console.log('---filePaths---')
-
     await this.process(srcDir, targetDir, this.middleware, filePaths)
-    // console.log('---this.handledFilePaths---')
-    // console.log(this.handledFilePaths)
-    // console.log('---this.handledFilePaths---')
-    const remainigFiles = [...new Set(filePaths).difference(new Set(this.handledFilePaths))];
-    console.log('---remainigFiles---')
-    console.log(remainigFiles)
-    console.log('---remainigFiles---')
 
+    const remainigFiles = [...new Set(filePaths).difference(new Set(this.handledFilePaths))];
     await this.process(srcDir, targetDir, this.endware, remainigFiles);
 
   }
@@ -56,9 +46,6 @@ export default class IncrementalCopy {
     for (const plugin of middleware) {
       const acceptedFilePaths = await plugin.accepts(filePaths);
       if(acceptedFilePaths.length){
-
-        // danger(`${plugin.name} accepted`, acceptedFilePaths);
-
         this.handledFilePaths.push(...acceptedFilePaths);
         const haveChanged = await plugin.shouldRebuild(srcDir, acceptedFilePaths);
         if (haveChanged) {

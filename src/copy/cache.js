@@ -2,7 +2,7 @@ import { DatabaseSync } from "node:sqlite";
 import fs from "node:fs";
 
 
-export const db = new DatabaseSync("./incremental-copy-cache.db");
+export const db = new DatabaseSync(".cache/incremental-copy-cache.db");
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS files (
