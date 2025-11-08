@@ -1,11 +1,14 @@
-import path from 'path';
 
 export default class Page {
-  constructor(chunk, index, chunks) {
-    this.chunk = chunk;
-    this.index = index;
-    this.chunks = chunks;
+  constructor(slice, number, allPosts) {
+    this.chunk = slice;
+    this.index = number;
+    this.chunks = allPosts;
     this.pagerRadius = 5;
+  }
+
+  async posts(){
+    return this.chunk;
   }
 
   get isHome() {
@@ -39,7 +42,7 @@ export default class Page {
     return this.chunks.length;
   }
 
-  get navPager(){
+  get pager(){
     return Array.from({length: this.pagerRadius * 2 + 1}, (_, i) =>  (this.currentPage - this.pagerRadius + i + this.totalPages) % this.totalPages );
   }
 

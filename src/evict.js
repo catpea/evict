@@ -1,26 +1,46 @@
 #!/usr/bin/env node
-import { argv } from 'node:process';
 
-import fs from 'fs';
-import path from 'path';
+import { cpus } from 'os';
+import { opt } from './lib.js';
 
-import Book from './obj/Book.js';
-import Post from './obj/Post.js';
-import Page from './obj/Page.js';
+import Website from './objects/Website.js';
+import Publishing from './objects/Publishing.js';
 
-const dir = src => fs.readdirSync(src, { withFileTypes: true }).filter(dirent => dirent.isDirectory()).filter(dirent => !dirent.name.startsWith('_')).map(({name}) => path.join(src, name))
-const chunk = (arr, chunkSize) => Array.from({ length: Math.ceil(arr.length / chunkSize) }, (_, i) =>  arr.slice(i * chunkSize, i * chunkSize + chunkSize) );
+const defaults = {
+  maxThreads: cpus().length,
+  pp: 24,
+  src: 'samples/database',
+  dest: 'dist',
+  pub: 'samples/services.json',
+};
 
-const defaults = { pp: 24, src: 'samples/database', dest: 'dist', };
-const options = {...defaults, ...Object.fromEntries(argv.filter(a=>a.startsWith('--')).map(a=>a.substring(2).split('=')))};
+const options = opt(defaults);
+console.log(options);
 
-const books = dir(options.src).map(o=>new Book(o));
-const posts = books.reduce((a, book)=>a.concat(dir(book.src)),[]).map(o=>new Post(o)); // all posts from all books
-await Promise.all(posts.map(post=>post.load())) // load all posts
-const pages = chunk(posts, options.pp).map((o,i,a)=>new Page(o,i,a));
+console.time("Execution Time");
 
 
-// console.dir(books);
-// console.dir(posts);
-// console.dir(pages);
-// console.dir(pages[3].navPager );
+const website = new Website(options);
+const publishing = new Publishing(options);
+
+for (const service of await publishing.services()) {
+  const generation = await service.build(website);
+  await service.publish(generation);
+}
+
+console.timeEnd("Execution Time");
+
+// const posts = books.reduce((a, book)=>a.concat(dir(book.src)),[]).map(o=>new Post(o)); // all posts from all books
+// await Promise.all(posts.map(post=>post.load())) // load all posts
+// const pages = chunk(posts, options.pp).map((o,i,a)=>new Page(o,i,a));
+
+// Example usage with website.stats
+// for (let i = 0; i < 13; i++) {
+//     await measureExecution(website.stats.bind(website));
+// }
+// async function measureExecution(asyncFunc, ...args) {
+//     console.time("Execution Time");
+//     const result = await asyncFunc(...args);
+//     // console.log(result);
+//     console.timeEnd("Execution Time");
+// }
