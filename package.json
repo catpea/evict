@@ -2,7 +2,7 @@
   "type": "module",
   "name": "evict",
   "description": "lightweight static blog generator",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "importmap": {
     "imports": {
       "lib": "./src/lib.js",
