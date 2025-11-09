@@ -4,21 +4,12 @@ import importmap from '../../importmap.js';
 const { camelToKebab } = await importmap("lib");
 
 const IncrementalCopy = await importmap("incremental-copy");
-const Renderers = await importmap("renderers");
-
-// const avif = await importmap("incremental-copy/avif/avif.js");
-// const {echo} = await importmap("incremental-copy/echo/echo.js");
-
-// const mp3 = await importmap("incremental-copy/mp3/mp3-ffmpeg.js");
-// const avif = await importmap("incremental-copy/avif/avif-sharp.js");
-// const markdown = await importmap("incremental-copy/markdown/markdown.js");
 
 const Mp3      = await importmap("incremental-copy/mp3/Mp3.js");
 const Avif     = await importmap("incremental-copy/avif/Avif.js");
 const Markdown = await importmap("incremental-copy/markdown/Markdown.js");
 
-console.log(importmap)
-console.log(IncrementalCopy)
+const Renderers = await importmap("renderers");
 
 import Service from '../Service.js';
 
@@ -27,19 +18,21 @@ export default class NekoWeb extends Service {
 #renderers;
 
   constructor(options){
-    super()
+    super();
+
     Object.assign(this, options);
 
+    // for permalinks
     this.#copier = new IncrementalCopy();
     this.#copier.use(new Mp3({preset: 'tiny'}));
     this.#copier.use(new Avif({ width:512, height:512, quality: 40, effort: 9 }));
     this.#copier.use(new Markdown());
 
+    // for pagination
     this.#renderers = new Renderers();
   }
 
   get location(){
-
     return path.join(this.dest, camelToKebab(this.service), this.id, 'wwwroot' );
   }
 
@@ -65,37 +58,5 @@ export default class NekoWeb extends Service {
   publishing(website){
     console.log(`Publishing website id ${this.id} from ${this.location}...`);
   }
-
-  async render(website){
-
-    return console.log('(=^･^=)∫  NekoWeb Says: RENDER website!',  website);
-    const books = await website.books();
-
-
-    // these are set in services file
-    this.renderer = renderer;
-    this.theme = theme;
-
-    for await (const book of books) {
-      // book.id = furkies-purkies
-      // book.name
-      // book.posts
-      // book.pages
-      for await (const page of await book.pages()) {
-        // page.posts()
-        // page.isHome
-        // page.fileName
-        // page.pager
-        for await (const post of await page.posts()) {
-          // post has post.json fileds
-        }
-      }
-    }
-  }
-
-
-
-
-
 
 }

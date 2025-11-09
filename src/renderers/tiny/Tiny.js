@@ -1,5 +1,7 @@
 import { BlogPage } from 'aggressive';
 
+import runstop from 'runstop';
+
 import path from 'path';
 import { writeFile, mkdir } from 'node:fs/promises';
 
@@ -23,8 +25,8 @@ export default class Tiny {
         // page.pager
 
         const blogPage = new BlogPage({
-          title: 'My Awesome Blog',
-          subtitle: 'Where I share my thoughts',
+          title: service.title,
+          subtitle: service.subtitle,
         });
 
         blogPage.setPagerLinks(page.pager)
@@ -35,10 +37,13 @@ export default class Tiny {
 
           blogPage.addPost({
             title: post.title,
-            date: 'Nov 8, 2025',
-            datetime: '2025-11-08',
+            date: post.date,
             content: '<p>Hello, classless world!</p>',
+            url: `/permalink/${post.guid}/`,
           });
+
+
+          // await runstop({ post });
 
         } // posts
 
