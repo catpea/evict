@@ -14,5 +14,8 @@ export const chunk = (arr, chunkSize) => Array.from({ length: Math.ceil(arr.leng
 export const isOutdated = async (src, dest) => (await stat(src)).mtime.getTime() > (await stat(dest)).mtime.getTime();
 export const ms = (ms) => TIME_UNITS.reduce((str, [name, n]) => { const val = Math.floor(ms / n); ms %= n; return val ? `${str}${str ? ', ' : ''}${val} ${name}${val > 1 ? 's' : ''}` : str; }, '') || `${ms} ms`;
 
+// strings
+export const camelToKebab = s => s.replace(/[A-Z]/g, m => '-' + m.toLowerCase()).replace(/^-/,'');
+
 // image processing
 export const fitToKBounds = (w, h, K=1) => (w>1024*K||h>1024*K) ? (w>h ? [1024*K, parseInt(1024*K/(w/h))] : [parseInt(1024*K*(w/h)), 1024*K]) : [w,h]; // resize image to fit 1K

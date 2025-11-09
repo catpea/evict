@@ -12,18 +12,14 @@ const services = {
   NekoWeb,
 }
 
-export default class Publishing {
+export default class Generator {
+  constructor({dest, upload}) {
 
-  constructor({pub, dest}) {
-    this.pub = pub;
     this.dest = dest;
+    this.upload = upload;
   }
-
-  async services(){
-    return (await readJson(this.pub)).filter(o=>o.active).map((o)=> new services[o.name]({...o, dest:this.dest}) );
+  async targets(){
+    return (await readJson(this.upload)).filter(o=>o.active).map((o)=> new services[o.service]({...o, dest:this.dest}) );
   }
-
-
-
 
 }

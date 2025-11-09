@@ -6,15 +6,11 @@ import { Memoize } from './lib/Memoize.js';
 // import Page from './obj/Page.js';
 
 export default class Website {
-  constructor({ src, dest }) {
-    this.src = src;
-    this.dest = dest;
-    this.memoized = new Memoize(this, [this.books, this.stats, this.posts]);
-    return this.memoized;
-  }
+  constructor(options) {
+    Object.assign(this, options);
 
-  get name() {
-    return 'Meow!'; // some heavy computation here
+    // this.memoized = new Memoize(this, [this.books, this.stats, this.posts]);
+    // return this.memoized;
   }
 
   async stats() {
@@ -29,37 +25,33 @@ export default class Website {
   }
 
   async *posts(count = Infinity) {
+    const reversed = count < 0;
+    const limit = Math.abs(count);
 
-  const reversed = count < 0;
-  const limit = Math.abs(count);
+    // these are objects, already in memeory
+    // this is required for coherent sort operation across multiple books
+    const buffer = [];
 
-  // these are objects, already in memeory
-  // this is required for coherent sort operation across multiple books
-  const buffer = [];
-
-  for await (const book of await this.memoized.books()) {
-    for await (const page of await book.pages()) {
-      for await (const post of await page.posts()) {
-        buffer.push([post, book]);
+    for await (const book of await this.memoized.books()) {
+      for await (const page of await book.pages()) {
+        for await (const post of await page.posts()) {
+          buffer.push([post, book]);
+        }
       }
     }
+
+    buffer.sort(function (a, b) {
+      return new Date(b[0].date) - new Date(a[0].date);
+    });
+
+    if (reversed) buffer.reverse();
+
+    let yielded = 0;
+    for (const item of buffer) {
+      if (yielded >= limit) return;
+      yield item;
+      yielded++;
+    }
   }
-
-  buffer.sort(function(a,b){ return new Date(b[0].date) - new Date(a[0].date) });
-  if(reversed) buffer.reverse();
-
-  let yielded = 0;
-  for (const item of buffer) {
-    if (yielded >= limit) return;
-    yield item;
-    yielded++;
-  }
-
-  }
-
-
-
-
-
 
 }

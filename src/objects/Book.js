@@ -37,12 +37,12 @@ export default class Book {
     const dirs = await dir(this.src);
     const posts = dirs.map(o=>new Post(o));
     await Promise.all(posts.map(post=>post.load()));
-    return posts;
+    return posts.reverse();
   }
 
   async pages(){
     const chunks = chunk((await this.posts()), this.pp);
-    const response = chunks.map((slice, index)=>new Page(slice, index, chunks));
+    const response = chunks.map((slice, index)=>new Page(slice, index, chunks, this.id));
     return response;
     // return (await dir(this.src)).map(o=>new Book(o));
   }

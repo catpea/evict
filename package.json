@@ -5,6 +5,8 @@
   "version": "2.0.3",
   "importmap": {
     "imports": {
+      "lib": "./src/lib.js",
+      "renderers": "./src/renderers/Renderers.js",
       "incremental-copy": "./src/copy/IncrementalCopy.js",
       "incremental-copy/": "./src/copy/middleware/"
     }
@@ -25,7 +27,8 @@
   "author": "catpea (https://github.com/catpea)",
   "license": "MIT",
   "dependencies": {
-    "sharp": "^0.34.4"
+    "sharp": "^0.34.4",
+    "aggressive": "^1.0.0"
   },
   "repository": {
     "type": "git",
