@@ -29,6 +29,30 @@ export default class Tiny {
           subtitle: service.subtitle,
         });
 
+
+// Set the logo - one semantic action
+blogPage.setLogo({
+  src: 'logo.svg',
+  alt: 'Site logo',
+  caption: 'BeautifulWeb'
+});
+
+// Add navigation - semantic links, not divs and classes
+blogPage.setNavLinks([
+  { text: 'Home', href: '/', ariaCurrent: 'page' },
+  { text: 'Poetry', href: '/poetry' },
+  { text: 'Work', href: '/work' },
+
+]);
+
+// Add sidebar categories - semantic organization
+blogPage.setCategories([
+  { text: 'Programming', href: 'programming.html' },
+  { text: 'Philosophy', href: 'philosophy.html' },
+  { text: 'Humanity', href: 'humanity.html' },
+  { text: 'Longevity', href: 'longevity.html' },
+]);
+
         blogPage.setPagerLinks(page.pager)
 
         for await (const post of await page.posts()) {
